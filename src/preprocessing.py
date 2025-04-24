@@ -3,10 +3,11 @@ import pandas as pd
 from pandas.api.types import is_numeric_dtype #To check for the column whether it has numeric datatype or not
 from sklearn.preprocessing import LabelEncoder,OneHotEncoder
 debug= False
+encode_debug=True
 class Preprocessing:
     def __init__(self,df):
         self.df=df
-
+        self.label_encoder=LabelEncoder()
     def description_info_head_dataframe(self):
         print(f"ENTERED 1ST PREPROCESSING")
         stats_df=int(input(f"Enter 1 for the [quick stats of the numerical column in a dataframe] else 0:: "))
@@ -71,4 +72,36 @@ class Preprocessing:
     
     def encoding_columns(self):
         print(f"ENTERED 3rd PREPROCESSING")
+        list_one_hot_encoded_columns=[]
+        list_of_label_encoder_columns=[]
+        dictionary_of_the_column_with_index={index:col for index,col in enumerate(self.df.columns) if self.df[col].dtype==object}
+        #Below i  have displayed the values of the column with their index which are in a dataframe
+        print(f"These are the columns in a dataframe :: {dictionary_of_the_column_with_index}")
+
+        if encode_debug:
+            for index,column in dictionary_of_the_column_with_index.items():
+                print(f"At index {index} ,the column is:: {column}")
+
+        for i in range(len(self.df.columns)-1):
+            choose_encoding=int(input("Enter 1 for one hot encoding , 2 for label encoding and 3 for exiting :: "))
+            if choose_encoding==3:
+                break
+            column_index=int(input("Enter the index of the column for encoding:: "))
+            if choose_encoding==1:
+                list_one_hot_encoded_columns.append(dictionary_of_the_column_with_index[column_index])
+            elif choose_encoding==2:
+                list_of_label_encoder_columns.append(dictionary_of_the_column_with_index[column_index])
+
+        if encode_debug:
+            print(f"This is the list of the one hot encoded columns :: {list_one_hot_encoded_columns}")
+            print(f"This is the list of label encoded columns {list_of_label_encoder_columns}")
+        #Now apply encoding  to the columns
+        #Applied LabelEncoder 
+        for val in list_of_label_encoder_columns:
+            self.df[val]=self.label_encoder.fit_transform(self.df[val])
+        #Applied OneHotEncoding
+        self.df=pd.get_dummies(self.df,columns=list_one_hot_encoded_columns)
+        print(f"top five values of the df :: \n {self.df.head()}")
+        print("COMPLETED 3rd PREPROCESSING")
+
 
