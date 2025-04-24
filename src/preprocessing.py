@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from pandas.api.types import is_numeric_dtype #To check for the column whether it has numeric datatype or not
+from sklearn.preprocessing import LabelEncoder,OneHotEncoder
 debug= False
 class Preprocessing:
     def __init__(self,df):
@@ -61,11 +62,13 @@ class Preprocessing:
                         self.df[column_name] = self.df[column_name].fillna(self.df[column_name].mean())
                     elif value == 1:
                         self.df[column_name] = self.df[column_name].fillna(self.df[column_name].median())
-        else:
+        elif handle_missing_values_with_mean_median==0:
             print(f"MISSING VALUES HAS NOT BEEN HANDLED")
         print(f"Top five values of the DataFrame::\n{self.df.head()}")
         if debug:
              print(f"TRUE if there is null value and FALSE if there is no null value ::{self.df["age"].isnull().any()}")
         print(f"2nd PREPROCESSING COMPLETED ")
     
-    
+    def encoding_columns(self):
+        print(f"ENTERED 3rd PREPROCESSING")
+

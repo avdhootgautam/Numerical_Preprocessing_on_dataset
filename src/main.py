@@ -14,6 +14,7 @@ def main():
     #target_column="income_>50K"
     target_column=input(f"Enter the target column(string)::")
     preprocess1.handle_missing_values(target_column)
-    
+
+    preprocess1.encoding_columns()
 if __name__=="__main__":
     main()
