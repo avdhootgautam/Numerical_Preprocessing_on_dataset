@@ -16,5 +16,6 @@ def main():
     preprocess1.handle_missing_values(target_column)
 
     preprocess1.encoding_columns()
+    preprocess1.scale_numerical_features()
 if __name__=="__main__":
     main()

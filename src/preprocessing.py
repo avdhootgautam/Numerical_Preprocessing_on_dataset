@@ -1,9 +1,11 @@
 import numpy as np
 import pandas as pd
 from pandas.api.types import is_numeric_dtype #To check for the column whether it has numeric datatype or not
-from sklearn.preprocessing import LabelEncoder,OneHotEncoder
+from sklearn.preprocessing import LabelEncoder,StandardScaler,MinMaxScaler,RobustScaler,MaxAbsScaler
+from preprocessingScaling import preprocessing_scaling
 debug= False
 encode_debug=True
+scale_debug=True
 class Preprocessing:
     def __init__(self,df):
         self.df=df
@@ -103,5 +105,42 @@ class Preprocessing:
         self.df=pd.get_dummies(self.df,columns=list_one_hot_encoded_columns)
         print(f"top five values of the df :: \n {self.df.head()}")
         print("COMPLETED 3rd PREPROCESSING")
+    
+    def scale_numerical_features(self):
+        #To remove the outliers we use scaling features
+        #Four features will be provided
+        print(f"ENTERED 4th PREPROCESSING")
+        set_of_standard_scaling_column=set()
+        set_of_min_max_scaling_column=set()
+        set_of_robust_scaling_columns=set()
+        set_of_max_absolute_scaling_columns=set()
+        dict_of_column_with_their_index={index: col for index,col in enumerate(self.df.columns)}
+        print(f"Below i have shown the column:: \n{dict_of_column_with_their_index}")
+        for i in range(len(self.df.columns)-1):
+            choose_scaling=int(input("Enter 1 for standard_scaling,2 for min_max_scaling,3 for robust_scaling ,4 for max_absolute_scaling and 5 for exiting :: "))
+            if choose_scaling==5:
+                break
+            column_index=int(input("Enter the index of the column:: "))
+            if choose_scaling==1:
+                set_of_standard_scaling_column.add(dict_of_column_with_their_index[column_index])
+            elif choose_scaling==2:
+                set_of_min_max_scaling_column.add(dict_of_column_with_their_index[column_index])
+            elif choose_scaling==3:
+                set_of_robust_scaling_columns.add(dict_of_column_with_their_index[column_index])
+            elif choose_scaling==4:
+                set_of_max_absolute_scaling_columns.add(dict_of_column_with_their_index[column_index])
+            #For each step i will display the list for all the scaling features
 
+            if set_of_standard_scaling_column:
+                print(f"set of column choosen for the Standatrd Scaling:: {set_of_standard_scaling_column}")
+            if set_of_min_max_scaling_column:
+                print(f"set of column choosen for the Min Max Scaling:: {set_of_min_max_scaling_column}")
+            if set_of_robust_scaling_columns:
+                print(f"set of column choosen for the Robust Scaling:: {set_of_robust_scaling_columns}")
+            if set_of_max_absolute_scaling_columns: 
+                print(f"set of column choosen for the Max Absolute Scaling:: {set_of_max_absolute_scaling_columns}")
+        self.df=preprocessing_scaling(self.df,set_of_standard_scaling_column,set_of_min_max_scaling_column,set_of_robust_scaling_columns,set_of_max_absolute_scaling_columns)
+        if scale_debug:
+            print(f"First five values after scaling the features:: \n{self.df.head()}")
 
+        print("COMPLETED 4th PREPROCESSING")
