@@ -144,3 +144,4 @@ class Preprocessing:
             print(f"First five values after scaling the features:: \n{self.df.head()}")
 
         print("COMPLETED 4th PREPROCESSING")
+    
