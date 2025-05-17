@@ -3,6 +3,7 @@ import pandas as pd
 from pandas.api.types import is_numeric_dtype #To check for the column whether it has numeric datatype or not
 from sklearn.preprocessing import LabelEncoder,StandardScaler,MinMaxScaler,RobustScaler,MaxAbsScaler
 from preprocessingScaling import preprocessing_scaling
+import configparser
 debug= False
 encode_debug=True
 scale_debug=True
@@ -10,19 +11,21 @@ class Preprocessing:
     def __init__(self,df):
         self.df=df
         self.label_encoder=LabelEncoder()
+        self.config=configparser.ConfigParser()
+        self.config.read("config.ini")
     def description_info_head_dataframe(self):
-        print(f"ENTERED 1ST PREPROCESSING")
-        stats_df=int(input(f"Enter 1 for the [quick stats of the numerical column in a dataframe] else 0:: "))
+        print(f"ENTERED 1ST PREPROCESSING(description,info and head of dataframe)")
+        stats_df=int(self.config['DESCRIPTION_OF_HEAD']['stats_df'])
         if stats_df==1:
             print(f"Stats for the numerical column of the dataframe is ::\n{self.df.describe()}")
         else:
             print(f"NO DESCRIPTION")
-        summary_df=int(input(f"Enter 1 for the [concise summary of the dataframe ] else 0:: "))
+        summary_df=int(self.config['DESCRIPTION_OF_HEAD']['summary_df'])
         if summary_df==1:
             print(f"\n {self.df.info()}")
         else:
             print(f"NO SUMMARY")
-        head_df=int(int(input("Enter 1 for the [head of the dataframe] else 0:: ")))
+        head_df=int(self.config['DESCRIPTION_OF_HEAD']['head_df'])
         if head_df==1:
             print(f"Top five values of the dataframe are ::\n {self.df.head()}")
         else:
@@ -34,12 +37,13 @@ class Preprocessing:
         #Below , directly removed the rows having NA value
         if debug:
             print(f"TRUE if there is null value and FALSE if there is no null value ::{self.df["age"].isnull().any()}")
-        remove_na=int(input("Enter 1 for removing all the rows with na values(recommnded 1 for more null values):: "))
+        remove_na=int(self.config['HANDLE_MISSING_VALUES']['remove_na'])
         if remove_na==1:
             self.df.dropna(axis=0,inplace=True)
         else:
             print(f"NO ROWS REMOVED WITH NA VALUES")
-        handle_missing_values_with_mean_median=int(input("Enter 1 if you want to handle the missing values with mean and median:: "))
+        print("NOW HANDLING MISSING VALUES BY REPLACING THE VALUES WITH MEAN OR MEDIAN")
+        handle_missing_values_with_mean_median=int(self.config['HANDLE_MISSING_VALUES']['handle_missing_values_with_mean_median'])
         if handle_missing_values_with_mean_median==1:
             
             total_number_of_columns=len(self.df.columns)-1#I have decraesed one because i don't want to do any  change in result column
@@ -142,6 +146,5 @@ class Preprocessing:
         self.df=preprocessing_scaling(self.df,set_of_standard_scaling_column,set_of_min_max_scaling_column,set_of_robust_scaling_columns,set_of_max_absolute_scaling_columns)
         if scale_debug:
             print(f"First five values after scaling the features:: \n{self.df.head()}")
-
+        return self.df
         print("COMPLETED 4th PREPROCESSING")
-    
