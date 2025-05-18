@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from loadDataset import load_dataset 
 from preprocessing import Preprocessing
+from splitting import Split
 import configparser#declared fro reading the file
 debug=True
 
@@ -19,12 +20,21 @@ def main():
     print("STARTING OF PREPROCESSING IN MAIN")
     preprocess1=Preprocessing(df)
     preprocess1.description_info_head_dataframe()
-    #target_column="income_>50K"
-    target_column=input(f"Enter the target column(string)::")
+    print("target column has been taken")
+    target_column=str(config["MAIN"]["target_column"])
+
     preprocess1.handle_missing_values(target_column) 
     preprocess1.encoding_columns()
-    preprocess1.scale_numerical_features()
+    preprocess1.scale_numerical_features()#Here i got the final df after preprocessing
+    preprocess1.saving_preprocessed_data()
     print("END OF PREPROCESSING IN MAIN")
-    
+    print("-------------------------------------------")
+    print("SPLITTING OF DATASET IN MAIN")
+    #Here create one more dataframe
+    split1=Split()
+    split1.split_data()
+    print("SPLITTING COMPLETED IN MAIN")
+    print("-------------------------------------------")
+
 if __name__=="__main__":
     main()

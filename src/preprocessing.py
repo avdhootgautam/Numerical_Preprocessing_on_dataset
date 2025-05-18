@@ -4,6 +4,7 @@ from pandas.api.types import is_numeric_dtype #To check for the column whether i
 from sklearn.preprocessing import LabelEncoder,StandardScaler,MinMaxScaler,RobustScaler,MaxAbsScaler
 from preprocessingScaling import preprocessing_scaling
 import configparser
+import os
 debug= False
 encode_debug=True
 scale_debug=True
@@ -88,7 +89,7 @@ class Preprocessing:
             for index,column in dictionary_of_the_column_with_index.items():
                 print(f"At index {index} ,the column is:: {column}")
 
-        for i in range(len(self.df.columns)-1):
+        for i in range(len(self.df.columns)):
             choose_encoding=int(input("Enter 1 for one hot encoding , 2 for label encoding and 3 for exiting :: "))
             if choose_encoding==3:
                 break
@@ -148,3 +149,7 @@ class Preprocessing:
             print(f"First five values after scaling the features:: \n{self.df.head()}")
         return self.df
         print("COMPLETED 4th PREPROCESSING")
+    def saving_preprocessed_data(self):
+        print("SAVING [DF] IN AN OUTPUT FOLDER")
+        if not os.path.exists(self.config["MAIN"]["preprocessed_df"]):
+            self.df.to_csv(self.config["MAIN"]["preprocessed_df"],index=False)#Here i am directly saving the final preprocessed dataframe
