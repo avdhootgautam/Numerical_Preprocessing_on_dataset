@@ -14,3 +14,4 @@ class Split():
         print(f"This is the x_test after splitting {x_test.shape}")
         print(f"This is the y_train after splitting {y_train.shape}")
         print(f"This is the y_test after splitting {y_test.shape}")
+        return [x_train,x_test,y_train,y_test]
