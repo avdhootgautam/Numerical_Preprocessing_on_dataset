@@ -18,7 +18,7 @@ def main():
         train_dataset_path=config['DATASET']["train_dataset_path"]
         df=load_dataset(train_dataset_path)
         print("LOADING OF DATA COMPLETED")
-
+        print("-------------------------------------------")
         print("STARTING OF PREPROCESSING IN MAIN")
         preprocess1=Preprocessing(df)
         preprocess1.description_info_head_dataframe()
@@ -40,6 +40,8 @@ def main():
     print("-------------------------------------------")
     print("TRAINING STARTED IN MAIN")
     train1=Train(splitted_data)
-
+    train1.chose_algorithm()
+    print("TRAINING COMPLETED IN MAIN")
+    print("-------------------------------------------")
 if __name__=="__main__":
     main()
